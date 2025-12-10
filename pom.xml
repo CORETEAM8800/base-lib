@@ -8,7 +8,7 @@
 
   <groupId>travel.letstrip</groupId>
   <artifactId>base-lib</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>base-lib</name>
@@ -18,9 +18,32 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
   </properties>
 
   <dependencies>
+    <!-- Agar kutubxona Spring bilan bog'liq bo'lsa, consumerlarda Spring Boot parent boshqarsa
+         ushbu dependency 'provided' scope bo'lishi ma'qul. Aks holda o'chirib tashlang. -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+      <version>3.1.6</version> <!-- agar sizning servislaringizda boshqa versiya bo'lsa, shu yerga moslang -->
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>6.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.42</version>
+      <scope>provided</scope>
+    </dependency>
+
   </dependencies>
 
   <!-- GitHub Packages uchun -->
@@ -51,6 +74,9 @@
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.13.0</version>
+          <configuration>
+            <release>${maven.compiler.release}</release>
+          </configuration>
         </plugin>
 
         <plugin>
@@ -72,6 +98,7 @@
           <artifactId>maven-deploy-plugin</artifactId>
           <version>3.1.2</version>
         </plugin>
+
       </plugins>
     </pluginManagement>
   </build>
