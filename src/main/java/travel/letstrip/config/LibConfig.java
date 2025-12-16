@@ -20,16 +20,11 @@ public class LibConfig implements Ordered {
 
     @PostConstruct
     public void init() {
-        log.info("✅ base-lib fully initialized");
+        log.info("✅ Base-lib fully initialized");
         log.info("🏷️  Service: {}", applicationName);
         log.info("🔌 Port: {}", serverPort);
-        log.info("📦 Version: 1.0.2");
     }
 
-    @Bean
-    public LibInitializer libInitializer() {
-        return new LibInitializer(applicationName);
-    }
 
     @Override
     public int getOrder() {
