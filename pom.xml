@@ -8,7 +8,7 @@
 
   <groupId>travel.letstrip</groupId>
   <artifactId>base-lib</artifactId>
-  <version>1.0.6.2</version>
+  <version>1.0.6.3</version>
   <packaging>jar</packaging>
 
   <name>base-lib</name>
@@ -31,6 +31,12 @@
       <version>3.1.6</version> <!-- agar sizning servislaringizda boshqa versiya bo'lsa, shu yerga moslang -->
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <version>3.2.5</version>
+    </dependency>
+
     <dependency>
       <groupId>com.github.pengrad</groupId>
       <artifactId>java-telegram-bot-api</artifactId>
