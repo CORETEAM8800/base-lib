@@ -1,5 +1,16 @@
 package travel.letstrip.enums;
 
+/**
+ * Supported application languages.
+ */
 public enum Language {
-    EN, RU,UZ
+
+    /** English */
+    EN,
+
+    /** Russian */
+    RU,
+
+    /** Uzbek */
+    UZ
 }

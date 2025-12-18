@@ -1,181 +1,133 @@
 package travel.letstrip.telegram;
 
 import lombok.Data;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Root configuration properties for Telegram integration.
+ *
+ * <p>Binds configuration values under the {@code telegram.*} prefix
+ * from application properties or YAML files.</p>
+ *
+ * <p>This class aggregates configuration for:</p>
+ * <ul>
+ *   <li>Telegram bot settings</li>
+ *   <li>Telegram group settings</li>
+ *   <li>Telegram logging behavior</li>
+ *   <li>Telegram message options</li>
+ * </ul>
+ */
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "telegram")
 public class TelegramProperties {
 
     /**
-     * Bot sozlamalari
+     * Telegram bot configuration.
      */
     private Bot bot = new Bot();
 
     /**
-     * Group sozlamalari
+     * Telegram group configuration.
      */
     private Group group = new Group();
 
     /**
-     * Logging sozlamalari
+     * Telegram logging configuration.
      */
     private Logging logging = new Logging();
 
     /**
-     * Message sozlamalari
+     * Telegram message configuration.
      */
     private Message message = new Message();
 
-    @Data
-    public static class Bot {
-        /**
-         * Bot'ni yoqish/o'chirish
-         */
-        private boolean enabled = false;
-
-        /**
-         * Bot token
-         */
-        private String token;
-
-
-
-        /**
-         * Webhook mode (false = long polling)
-         */
-        private boolean webhook = false;
-
-        /**
-         * Webhook URL
-         */
-        private String webhookUrl;
-    }
-
-    @Data
-    public static class Group {
-        /**
-         * Asosiy group/chat ID
-         */
-        private String id;
-
-        /**
-         * Topic/Thread ID (ixtiyoriy)
-         */
-        private String topicId;
-
-        /**
-         * Admin group ID (alohida)
-         */
-        private String adminId;
-
-        private String reportGroupId;
-
-        private Integer reportGroupTopicId;
-        /**
-         * Error notification group ID
-         */
-        private String errorGroupId;
-    }
-
-    @Data
-    public static class Logging {
-        /**
-         * Telegram logging'ni yoqish
-         */
-        private boolean enabled = false;
-
-        /**
-         * Qaysi level'larni yuborish (ERROR, WARN, INFO)
-         */
-        private String level = "ERROR,WARN";
-
-        /**
-         * Stack trace'ni qo'shish
-         */
-        private boolean includeStackTrace = true;
-
-        /**
-         * Maximum stack trace lines
-         */
-        private int maxStackTraceLines = 5;
-
-        /**
-         * Async yuborish
-         */
-        private boolean async = true;
-
-        /**
-         * Queue size
-         */
-        private int queueSize = 1000;
-    }
-
-    @Data
-    public static class Message {
-        /**
-         * Maximum message uzunligi
-         */
-        private int maxLength = 4000;
-
-        /**
-         * Parse mode (HTML, Markdown, MarkdownV2)
-         */
-        private String parseMode = "HTML";
-
-        /**
-         * Web page preview'ni o'chirish
-         */
-        private boolean disableWebPagePreview = true;
-
-        /**
-         * Notification'ni o'chirish
-         */
-        private boolean disableNotification = false;
-
-        /**
-         * Rate limiting (messages per minute)
-         */
-        private int rateLimit = 30;
-    }
-
-    // Helper methods
-
+    /**
+     * Determines whether the Telegram bot is enabled.
+     *
+     * <p>The bot is considered enabled only if:</p>
+     * <ul>
+     *   <li>The bot is explicitly enabled</li>
+     *   <li>A valid bot token is provided</li>
+     * </ul>
+     *
+     * @return {@code true} if the bot is enabled and properly configured
+     */
     public boolean isBotEnabled() {
-        return bot.enabled && hasValidBotConfig();
+        return bot.isEnabled() && hasValidBotConfig();
     }
 
+    /**
+     * Determines whether Telegram logging is enabled.
+     *
+     * <p>Logging is enabled only if:</p>
+     * <ul>
+     *   <li>Logging is explicitly enabled</li>
+     *   <li>A valid bot configuration is present</li>
+     * </ul>
+     *
+     * @return {@code true} if Telegram logging is enabled
+     */
     public boolean isLoggingEnabled() {
-        return logging.enabled && hasValidBotConfig();
+        return logging.isEnabled() && hasValidBotConfig();
     }
 
+    /**
+     * Checks whether the bot configuration is valid.
+     *
+     * @return {@code true} if a non-empty bot token is configured
+     */
     public boolean hasValidBotConfig() {
-        return bot.token != null && !bot.token.isEmpty();
+        return bot.getToken() != null && !bot.getToken().isEmpty();
     }
 
+    /**
+     * Checks whether the main Telegram group configuration is valid.
+     *
+     * @return {@code true} if a group ID is configured
+     */
     public boolean hasValidGroupConfig() {
-        return group.id != null && !group.id.isEmpty();
+        return group.getId() != null && !group.getId().isEmpty();
     }
 
+    /**
+     * Checks whether a Telegram topic (forum thread) ID is configured.
+     *
+     * @return {@code true} if a topic ID is present
+     */
     public boolean hasTopicId() {
-        return group.topicId != null && !group.topicId.isEmpty();
+        return group.getTopicId() != null && !group.getTopicId().isEmpty();
     }
 
+    /**
+     * Returns the configured topic ID as an {@link Integer}.
+     *
+     * <p>If the topic ID is missing or cannot be parsed,
+     * {@code null} is returned.</p>
+     *
+     * @return topic ID as integer or {@code null}
+     */
     public Integer getTopicIdAsInteger() {
         if (!hasTopicId()) {
             return null;
         }
         try {
-            return Integer.parseInt(group.topicId);
+            return Integer.parseInt(group.getTopicId());
         } catch (NumberFormatException e) {
             return null;
         }
     }
 
+    /**
+     * Returns the configured logging levels as an array.
+     *
+     * <p>The levels are parsed from a comma-separated string
+     * (e.g. {@code "ERROR,WARN"}).</p>
+     *
+     * @return array of allowed log levels
+     */
     public String[] getLoggingLevels() {
-        return logging.level.split(",");
+        return logging.getLevel().split(",");
     }
 }
